@@ -218,6 +218,154 @@ tr.hit { outline: 2px solid #2563eb; }
   font-size: 20px;
   margin: 22px 0 10px;
 }
+
+.contractor-wrap { overflow-x: auto; margin: 12px 0 28px; border: 1px solid #9ca3af; }
+.contractor-table {
+  border-collapse: collapse;
+  min-width: 980px;
+  width: 100%;
+  font-size: 12px;
+  background: #fff;
+}
+.contractor-table th, .contractor-table td {
+  border: 1px solid #6b7280;
+  padding: 4px 6px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.contractor-table thead th {
+  background: #e5e7eb;
+  font-weight: 800;
+  color: #111;
+}
+.contractor-table .sys {
+  text-align: left !important;
+  padding-left: 8px !important;
+  white-space: normal;
+  min-width: 200px;
+  max-width: 260px;
+  font-weight: 600;
+}
+.contractor-table .cat {
+  color: #dc2626;
+  font-weight: 800;
+  text-align: left !important;
+  background: #f9fafb;
+}
+.cell-rnb { background: #86efac; font-weight: 700; color: #14532d; }
+.cell-hw { background: #bae6fd; font-weight: 700; color: #0c4a6e; }
+.cell-jc { background: #fde047; font-weight: 700; color: #713f12; }
+.cell-empty { background: #d1d5db; color: transparent; }
+.legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 0 0 8px;
+  border: 1px solid #9ca3af;
+  font-size: 13px;
+}
+.legend-rnb { background: #86efac; }
+.legend-hw { background: #bae6fd; }
+.legend-jc { background: #fde047; }
+.org-section { margin-top: 28px; padding-top: 8px; }
+.org-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.org-brand { font-weight: 800; color: #4c1d95; line-height: 1.35; }
+.org-brand .en { font-size: 15px; letter-spacing: .5px; }
+.org-brand .zh { font-size: 14px; }
+.org-title {
+  flex: 1;
+  min-width: 240px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e3a8a;
+  line-height: 1.45;
+}
+.emerg-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  background: #fff;
+}
+.emerg-table th, .emerg-table td {
+  border: 1px solid #111;
+  padding: 4px 8px;
+  text-align: left;
+}
+.emerg-table th { background: #f3f4f6; }
+.org-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 12px 8px 24px;
+  overflow-x: auto;
+}
+.org-box {
+  background: #1e3a8a;
+  color: #fff;
+  border: 2px solid #1e3a8a;
+  border-radius: 4px;
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 220px;
+  max-width: 320px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,.15);
+  line-height: 1.35;
+  font-size: 13px;
+}
+.org-box .role { font-weight: 800; margin-bottom: 2px; }
+.org-box .meta { font-size: 12px; opacity: .95; word-break: break-all; }
+.org-vline {
+  width: 2px;
+  height: 18px;
+  background: #2563eb;
+}
+.org-branch {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  position: relative;
+  padding-top: 18px;
+  margin-top: 0;
+}
+.org-branch::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: 2px;
+  background: #2563eb;
+}
+.org-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.org-col::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  width: 2px;
+  height: 18px;
+  background: #2563eb;
+}
+@media (max-width: 700px) {
+  .org-branch { flex-direction: column; align-items: center; gap: 12px; padding-top: 8px; }
+  .org-branch::before, .org-col::before { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -419,30 +567,132 @@ tr.hit { outline: 2px solid #2563eb; }
     setActive(pid);
   }
 
+
+  const LOCS = ["JCA","Lib","Ph 1","Ph 2","Ph 2ab","Ph 3A","Ph 3B","4A/IC","Ph 5","Ph 6","Ph 7","PCD","Ph 8","JCIT","X"];
+  // R=RNB, H=HW, J=JC, ""=empty
+  const CONTRACTOR_ROWS = [
+    { cat: "Sprinkler System 花灑系統", sys: "Sprinkler System 花灑系統", cells: "RRRRRRRRRRRRRRR" },
+    { cat: "FH/HR System 消防喉轆/龍頭系統", sys: "FH/HR System 消防喉轆/龍頭系統", cells: "RRRRRRRRRRRRRRR" },
+    { cat: "Addressable AFA System 智能式自動報火警系統", sys: "AFA Panel 消防控制箱", cells: "JHHHHHHHJHJHJJJ" },
+    { cat: "", sys: "PC station 電腦", cells: "JHHHHHHHJHJHJJJ" },
+    { cat: "", sys: "Smoke Detector 煙感", cells: "JHHHHHHHJHJHJJJ" },
+    { cat: "", sys: "Heat Detector 熱感", cells: "JHHHHHHHJHJHJJJ" },
+    { cat: "Others 其他", sys: "Drencher (manual) 水簾 (手動)", cells: ".R............." },
+    { cat: "", sys: "Drencher (auto) 水簾 (自動) / Open-head side", cells: "R....RR......R." },
+    { cat: "", sys: "wall sprinkler 開放式花灑", cells: "R....R.......R." },
+    { cat: "", sys: "Pre-action sprinkler 頂作用花灑", cells: "..R.R..R..R.R.." },
+    { cat: "", sys: "Fire Shutter (detection/Spr) 防火閘(煙感/花灑)", cells: "RR..RRR..RR.RR." },
+    { cat: "", sys: "Fire Shutter (fusible link) 防火閘(菲士)", cells: "R.RRR...R......" },
+    { cat: "", sys: "FM200 / Novec 1230 Gas System 氣體系統", cells: "..R.RR........." },
+    { cat: "", sys: "Smoke Curtain 隔煙屏", cells: ".........R....." },
+    { cat: "", sys: "Fire Curtain 隔火帳", cells: "R.............." }
+  ];
+
+  function cellClass(ch) {
+    if (ch === "R") return "cell-rnb";
+    if (ch === "H") return "cell-hw";
+    if (ch === "J") return "cell-jc";
+    return "cell-empty";
+  }
+  function cellLabel(ch) {
+    if (ch === "R") return "RNB";
+    if (ch === "H") return "HW";
+    if (ch === "J") return "JC";
+    return "";
+  }
+  function renderContractorTable() {
+    let h = `<h2 class="phase-title" style="background:#1e3a8a">消防承辦商</h2>`;
+    h += `<div class="subhead">FSI Contractor 消防承辦商</div>`;
+    h += `<div class="contractor-wrap"><table class="contractor-table"><thead><tr><th class="sys">System / 系統</th>`;
+    LOCS.forEach(l => { h += `<th>${esc(l)}</th>`; });
+    h += `</tr></thead><tbody>`;
+    CONTRACTOR_ROWS.forEach(row => {
+      h += `<tr>`;
+      if (row.cat && row.cat === row.sys) {
+        h += `<td class="sys cat">${esc(row.cat)}</td>`;
+      } else if (row.cat) {
+        h += `<td class="sys"><div class="cat" style="border:0;padding:0;background:transparent">${esc(row.cat)}</div><div style="margin-top:2px">${esc(row.sys)}</div></td>`;
+      } else {
+        h += `<td class="sys">${esc(row.sys)}</td>`;
+      }
+      for (const ch of row.cells) {
+        const lab = cellLabel(ch === "." ? "" : ch);
+        h += `<td class="${cellClass(ch === "." ? "" : ch)}">${esc(lab)}</td>`;
+      }
+      h += `</tr>`;
+    });
+    h += `</tbody></table></div>`;
+    h += `<div class="legend-bar legend-rnb"><b>RNB</b> — 1. 朱浩然 98771974　2. 冼錫健 61533213　3. 郭榮基 61303755</div>`;
+    h += `<div class="legend-bar legend-hw"><b>HW - Honeywell</b> — 24小時中心 800938703</div>`;
+    h += `<div class="legend-bar legend-jc"><b>JC - Johnson Control</b> — 24小時中心 22672333　Project no. 7078</div>`;
+    return h;
+  }
+  function orgBox(role, lines) {
+    return `<div class="org-box"><div class="role">${esc(role)}</div>` +
+      lines.map(t => `<div class="meta">${esc(t)}</div>`).join("") + `</div>`;
+  }
+  function renderOrgChart() {
+    let h = `<div class="org-section">`;
+    h += `<div class="org-header">`;
+    h += `<div><table class="emerg-table"><thead><tr><th colspan="2">Emergency Call List</th></tr></thead><tbody>`;
+    h += `<tr><td>1st</td><td>Lau Kwong Tai<br>Tel: 9746 9036</td></tr>`;
+    h += `<tr><td>2nd</td><td>Leung Kon Chung<br>Tel: 9778 5529</td></tr>`;
+    h += `<tr><td>3rd</td><td>O Ho Kwan<br>Tel: 6949 2452</td></tr>`;
+    h += `</tbody></table></div>`;
+    h += `<div class="org-title">Proposed Organization Chart of 3-Year Contract for Inspection, Testing and Maintenance of Fire Services Installation / Equipment and Fire Related Electrical Services Installation on Campus of The Hong Kong Polytechnic University<br>(15 August 2026 to 30 September 2029)</div>`;
+    h += `<div class="org-brand"><div class="en">RNB ENGINEERING HONG KONG LTD</div><div class="zh">創基工程香港有限公司</div></div>`;
+    h += `</div>`;
+    h += `<div class="org-chart">`;
+    h += orgBox("Direct Project Manager", ["Ringo Ngai", "Tel: 852 9656 8328", "ringongai@rnb.hk"]);
+    h += `<div class="org-vline"></div>`;
+    h += orgBox("Senior Project Engineer", ["Yeung Man Chung", "Tel: 852 5485 2171", "Yeungmanchung@rnb.hk"]);
+    h += `<div class="org-vline"></div>`;
+    h += orgBox("Assistant Engineer", ["O Ho Kwan, Johnson", "Tel: 852 6949 2452", "johnsono@rnb.hk"]);
+    h += `<div class="org-vline"></div>`;
+    h += orgBox("Supervisor", ["Leung Kon Chung", "Tel: 852 9778 5529"]);
+    h += `<div class="org-branch">`;
+    h += `<div class="org-col">`;
+    h += orgBox("FS Foreman", ["Lau Kwong Tai", "Tel: 852 9746 9036"]);
+    h += `<div class="org-vline"></div>`;
+    h += orgBox("Worker", []);
+    h += `</div>`;
+    h += `<div class="org-col">`;
+    h += orgBox("EL Foreman", ["Yeung Wai Ying, Solo", "Tel: 9049 7749"]);
+    h += `<div class="org-vline"></div>`;
+    h += orgBox("Worker", ["Tsang Wai Sum", "Tel: 852 9061 8878"]);
+    h += `</div></div></div></div>`;
+    return h;
+  }
+
   function showSpecial(id) {
     const title = (MENU.find(m => m[0] === id) || [id, id])[1];
     const g = (DATA.special_galleries || {})[id] || [];
-    let h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
-    if (id === "pic4") {
-      const pw = DATA.passwords || {};
-      h += `<table class="info-table pw-table"><thead><tr><th>範圍</th><th>操作密碼</th></tr></thead><tbody>`;
-      (pw.panels || []).forEach(r => {
-        h += `<tr><td>${esc(r.area)}</td><td><span class="loc-btn">${esc(r.code)}</span></td></tr>`;
-      });
-      h += `</tbody></table>`;
-      (pw.systems || []).forEach(s => {
-        h += `<div class="subhead">${esc(s.name)}</div>
-          <table class="info-table pw-table"><tbody>
-          <tr><td>日常操作登入用戶</td><td>${esc(s.daily_user)}</td></tr>
-          <tr><td>日常操作密碼</td><td>${esc(s.daily_pass)}</td></tr>
-          <tr><td>工程系統登入用戶</td><td>${esc(s.eng_user)}</td></tr>
-          <tr><td>工程系統密碼</td><td>${esc(s.eng_pass)}</td></tr>
-          </tbody></table>`;
-      });
-    } else if (g.length) {
-      h += g.map(s => `<p class="center">${imgTag(s, "full-img")}</p>`).join("");
+    let h = "";
+    if (id === "pic5") {
+      h = renderContractorTable() + renderOrgChart();
     } else {
-      h += `<p class="empty">沒有可用圖片</p>`;
+      h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
+      if (id === "pic4") {
+        const pw = DATA.passwords || {};
+        h += `<table class="info-table pw-table"><thead><tr><th>範圍</th><th>操作密碼</th></tr></thead><tbody>`;
+        (pw.panels || []).forEach(r => {
+          h += `<tr><td>${esc(r.area)}</td><td><span class="loc-btn">${esc(r.code)}</span></td></tr>`;
+        });
+        h += `</tbody></table>`;
+        (pw.systems || []).forEach(s => {
+          h += `<div class="subhead">${esc(s.name)}</div>
+            <table class="info-table pw-table"><tbody>
+            <tr><td>日常操作登入用戶</td><td>${esc(s.daily_user)}</td></tr>
+            <tr><td>日常操作密碼</td><td>${esc(s.daily_pass)}</td></tr>
+            <tr><td>工程系統登入用戶</td><td>${esc(s.eng_user)}</td></tr>
+            <tr><td>工程系統密碼</td><td>${esc(s.eng_pass)}</td></tr>
+            </tbody></table>`;
+        });
+      } else if (g.length) {
+        h += g.map(s => `<p class="center">${imgTag(s, "full-img")}</p>`).join("");
+      } else {
+        h += `<p class="empty">沒有可用圖片</p>`;
+      }
     }
     h += `<div class="center"><button class="loc-btn back-btn" onclick="show('map')">返回主頁</button></div>`;
     document.getElementById("specialMount").innerHTML = h;
