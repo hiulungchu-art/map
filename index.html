@@ -270,101 +270,6 @@ tr.hit { outline: 2px solid #2563eb; }
 .legend-rnb { background: #86efac; }
 .legend-hw { background: #bae6fd; }
 .legend-jc { background: #fde047; }
-.org-section { margin-top: 28px; padding-top: 8px; }
-.org-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-.org-brand { font-weight: 800; color: #4c1d95; line-height: 1.35; }
-.org-brand .en { font-size: 15px; letter-spacing: .5px; }
-.org-brand .zh { font-size: 14px; }
-.org-title {
-  flex: 1;
-  min-width: 240px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #1e3a8a;
-  line-height: 1.45;
-}
-.emerg-table {
-  border-collapse: collapse;
-  font-size: 12px;
-  background: #fff;
-}
-.emerg-table th, .emerg-table td {
-  border: 1px solid #111;
-  padding: 4px 8px;
-  text-align: left;
-}
-.emerg-table th { background: #f3f4f6; }
-.org-chart {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  padding: 12px 8px 24px;
-  overflow-x: auto;
-}
-.org-box {
-  background: #1e3a8a;
-  color: #fff;
-  border: 2px solid #1e3a8a;
-  border-radius: 4px;
-  padding: 8px 14px;
-  text-align: center;
-  min-width: 220px;
-  max-width: 320px;
-  box-shadow: 2px 2px 4px rgba(0,0,0,.15);
-  line-height: 1.35;
-  font-size: 13px;
-}
-.org-box .role { font-weight: 800; margin-bottom: 2px; }
-.org-box .meta { font-size: 12px; opacity: .95; word-break: break-all; }
-.org-vline {
-  width: 2px;
-  height: 18px;
-  background: #2563eb;
-}
-.org-branch {
-  display: flex;
-  justify-content: center;
-  gap: 48px;
-  position: relative;
-  padding-top: 18px;
-  margin-top: 0;
-}
-.org-branch::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 25%;
-  right: 25%;
-  height: 2px;
-  background: #2563eb;
-}
-.org-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-.org-col::before {
-  content: "";
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  width: 2px;
-  height: 18px;
-  background: #2563eb;
-}
-@media (max-width: 700px) {
-  .org-branch { flex-direction: column; align-items: center; gap: 12px; padding-top: 8px; }
-  .org-branch::before, .org-col::before { display: none; }
-}
 
 </style>
 </head>
@@ -631,45 +536,13 @@ tr.hit { outline: 2px solid #2563eb; }
     return `<div class="org-box"><div class="role">${esc(role)}</div>` +
       lines.map(t => `<div class="meta">${esc(t)}</div>`).join("") + `</div>`;
   }
-  function renderOrgChart() {
-    let h = `<div class="org-section">`;
-    h += `<div class="org-header">`;
-    h += `<div><table class="emerg-table"><thead><tr><th colspan="2">Emergency Call List</th></tr></thead><tbody>`;
-    h += `<tr><td>1st</td><td>Lau Kwong Tai<br>Tel: 9746 9036</td></tr>`;
-    h += `<tr><td>2nd</td><td>Leung Kon Chung<br>Tel: 9778 5529</td></tr>`;
-    h += `<tr><td>3rd</td><td>O Ho Kwan<br>Tel: 6949 2452</td></tr>`;
-    h += `</tbody></table></div>`;
-    h += `<div class="org-title">Proposed Organization Chart of 3-Year Contract for Inspection, Testing and Maintenance of Fire Services Installation / Equipment and Fire Related Electrical Services Installation on Campus of The Hong Kong Polytechnic University<br>(15 August 2026 to 30 September 2029)</div>`;
-    h += `<div class="org-brand"><div class="en">RNB ENGINEERING HONG KONG LTD</div><div class="zh">創基工程香港有限公司</div></div>`;
-    h += `</div>`;
-    h += `<div class="org-chart">`;
-    h += orgBox("Direct Project Manager", ["Ringo Ngai", "Tel: 852 9656 8328", "ringongai@rnb.hk"]);
-    h += `<div class="org-vline"></div>`;
-    h += orgBox("Senior Project Engineer", ["Yeung Man Chung", "Tel: 852 5485 2171", "Yeungmanchung@rnb.hk"]);
-    h += `<div class="org-vline"></div>`;
-    h += orgBox("Assistant Engineer", ["O Ho Kwan, Johnson", "Tel: 852 6949 2452", "johnsono@rnb.hk"]);
-    h += `<div class="org-vline"></div>`;
-    h += orgBox("Supervisor", ["Leung Kon Chung", "Tel: 852 9778 5529"]);
-    h += `<div class="org-branch">`;
-    h += `<div class="org-col">`;
-    h += orgBox("FS Foreman", ["Lau Kwong Tai", "Tel: 852 9746 9036"]);
-    h += `<div class="org-vline"></div>`;
-    h += orgBox("Worker", []);
-    h += `</div>`;
-    h += `<div class="org-col">`;
-    h += orgBox("EL Foreman", ["Yeung Wai Ying, Solo", "Tel: 9049 7749"]);
-    h += `<div class="org-vline"></div>`;
-    h += orgBox("Worker", ["Tsang Wai Sum", "Tel: 852 9061 8878"]);
-    h += `</div></div></div></div>`;
-    return h;
-  }
 
   function showSpecial(id) {
     const title = (MENU.find(m => m[0] === id) || [id, id])[1];
     const g = (DATA.special_galleries || {})[id] || [];
     let h = "";
     if (id === "pic5") {
-      h = renderContractorTable() + renderOrgChart();
+      h = renderContractorTable();
     } else {
       h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
       if (id === "pic4") {
