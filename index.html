@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PolyU F.S System</title>
+<style>
+:root {
+  --navy: #000055;
+  --panel: #fae9e6;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  display: flex;
+  font-family: "Microsoft JhengHei", "Arial", sans-serif;
+  background: #fff;
+  color: #111;
+}
+.btn-glass {
+  background: linear-gradient(to bottom, #dcedfc 0%, #ffffff 40%, #ffffff 60%, #9bc4ee 100%);
+  border: 1px solid #73a7d5;
+  border-radius: 999px;
+  color: var(--navy);
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,.2);
+  cursor: pointer;
+  width: 100%;
+}
+.btn-glass.active {
+  outline: 2px solid #1d4ed8;
+  background: linear-gradient(to bottom, #bfdbfe 0%, #eff6ff 50%, #93c5fd 100%);
+}
+.btn-header {
+  background: linear-gradient(to bottom, #c6e0f7 0%, #ffffff 50%, #9bc4ee 100%);
+  border: 2px solid #73a7d5;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  text-align: center;
+  box-shadow: 2px 2px 5px rgba(0,0,0,.2);
+}
+.btn-header-text {
+  color: #e63946;
+  font-size: 22px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 0 #fff, 2px 2px 2px rgba(0,0,50,.3);
+}
+.map-container {
+  flex: 1;
+  background: var(--panel);
+  position: relative;
+  min-width: 0;
+}
+.page-view {
+  position: absolute;
+  inset: 8px;
+  border: 2px solid #d1d5db;
+  background: #fff;
+  overflow: auto;
+  display: none;
+}
+.page-view.on { display: block; }
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+.map-wrap img.campus {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.map-hotspots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hotspot {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+.hotspot:hover { background: rgba(37,99,235,.22); border-color: #2563eb; }
+.sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  border-left: 2px solid #9ca3af;
+  padding: 16px;
+  overflow-y: auto;
+  background: #fff;
+}
+.sidebar h1 {
+  color: #000080;
+  font-style: italic;
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+.search {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #73a7d5;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.content-inner { padding: 20px 24px 40px; max-width: 1100px; margin: 0 auto; }
+.hero-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.hero-row img {
+  flex: 1;
+  min-width: 240px;
+  max-height: 280px;
+  object-fit: cover;
+  border: 1px solid #9ca3af;
+  background: #f3f4f6;
+  cursor: pointer;
+}
+h2.phase-title {
+  margin: 0 0 12px;
+  padding: 8px;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 3px;
+  font-size: 22px;
+}
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  margin-bottom: 16px;
+}
+.info-table th, .info-table td {
+  border: 1px solid #6b7280;
+  padding: 6px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+.info-table thead th { background: #fde047; }
+.kind { color: #dc2626; text-align: left !important; padding-left: 12px !important; }
+.loc-btn {
+  background: linear-gradient(to bottom, #f0f8ff 0%, #fff 40%, #dbeafe 100%);
+  border: 1px solid #7dd3fc;
+  border-radius: 4px;
+  color: var(--navy);
+  padding: 2px 8px;
+  display: inline-block;
+  cursor: pointer;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.2);
+}
+tr.hit { outline: 2px solid #2563eb; }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  margin: 10px 0 20px;
+}
+.gallery img, .album img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border: 1px solid #9ca3af;
+  cursor: pointer;
+  background: #f3f4f6;
+}
+.full-img {
+  width: 100%;
+  max-height: calc(100vh - 160px);
+  object-fit: contain;
+  cursor: zoom-in;
+  background: #111;
+}
+.album { display: none; margin: 8px 0 16px; }
+.album.on { display: block; }
+.pdf-link { display: inline-block; margin: 4px 6px 4px 0; color: #1d4ed8; }
+.back-btn {
+  display: inline-block;
+  margin: 24px auto 8px;
+  padding: 6px 20px;
+}
+.center { text-align: center; }
+.pw-table td:first-child { text-align: left; padding-left: 12px; font-weight: bold; }
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+#lightbox.on { display: flex; }
+#lightbox img { max-width: 96%; max-height: 96%; object-fit: contain; }
+.empty { color: #6b7280; text-align: center; padding: 40px; }
+.subhead {
+  color: #dc2626;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-align: center;
+  font-size: 20px;
+  margin: 22px 0 10px;
+}
+</style>
+</head>
+<body>
+<div class="map-container">
+  <div id="view-map" class="page-view on">
+    <div class="map-wrap" id="mapWrap">
+      <img class="campus" id="campusImg" alt="PolyU campus map">
+      <div class="map-hotspots" id="hotspots"></div>
+    </div>
+  </div>
+  <div id="view-phase" class="page-view">
+    <div class="content-inner" id="phaseMount"></div>
+  </div>
+  <div id="view-special" class="page-view">
+    <div class="content-inner" id="specialMount"></div>
+  </div>
+  <div id="view-search" class="page-view">
+    <div class="content-inner" id="searchMount"></div>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <h1>PolyU F.S System</h1>
+  <div class="btn-header"><div class="btn-header-text">位置及相片</div></div>
+  <input class="search" id="q" type="search" placeholder="搜尋房號 / 系統，例如 JJ83-F、消防泵">
+  <div id="menu"></div>
+</aside>
+<div id="lightbox"><img alt=""></div>
+
+<script src="assets/data.js"></script>
+<script>
+(function () {
+  const DATA = window.FS_DATA || { phases: {}, special_galleries: {}, heroes: {}, passwords: {} };
+  const MENU = [
+    ["phase1", "一期 (CDEF) & Library"],
+    ["phase2", "二期 (VA, VS, MN)"],
+    ["phase2ab", "二期 AB (FG, GH, HJ)"],
+    ["phase3a", "三期A (AG, BC)"],
+    ["phase3b", "三期B (QT, ST & Block S)"],
+    ["phase4", "四期 AIC 工業中心 (W, TU)"],
+    ["phase5", "五期 (P, PQ)"],
+    ["phase6", "六期李嘉誠樓 (M, N)"],
+    ["phase7", "七期李兆基樓 (Y)"],
+    ["phase8", "八期 (Block Z)"],
+    ["phase-v", "Jockey Club Innovation Tower (V)"],
+    ["phase-x", "Block X Sports Centre"],
+    ["phase-qr", "Professional Complex (R, QR)"],
+    ["phase-k", "Jockey Club Auditorium (K)"],
+    ["pic1", "F.S INLET 消防入水掣"],
+    ["pic2", "SPRINKLER INLET 花灑入水掣"],
+    ["pic3", "消防水缸,總掣,泵房位置"],
+    ["pic4", "消防系統電腦操作密碼"],
+    ["pic5", "消防承辦商"]
+  ];
+  const COLORS = {
+    phase1: "#dc2626", phase2: "#ff4500", phase2ab: "#4f46e5", phase3a: "#16a34a",
+    phase3b: "#db2777", phase4: "#4b5563", phase5: "#991b1b", phase6: "#1e3a8a",
+    phase7: "#f97316", phase8: "#7f1d1d", "phase-v": "#1f2937", "phase-x": "#f472b6",
+    "phase-qr": "#ca8a04", "phase-k": "#374151"
+  };
+  /* Original map 1025x722 image-map rects, stored as percent. */
+  const HOTSPOTS = [
+    { id: "phase3a", l: 5.6, t: 23.0, w: 12.2, h: 29.4, label: "三期A" },
+    { id: "phase2ab", l: 18.5, t: 35.7, w: 12.4, h: 16.9, label: "二期AB" },
+    { id: "phase2", l: 32.2, t: 32.3, w: 15.3, h: 21.9, label: "二期" },
+    { id: "phase1", l: 9.2, t: 52.8, w: 24.9, h: 27.0, label: "一期" },
+    { id: "phase6", l: 33.5, t: 59.1, w: 13.0, h: 21.6, label: "六期" },
+    { id: "phase5", l: 34.1, t: 80.1, w: 14.7, h: 5.8, label: "五期" },
+    { id: "phase-qr", l: 41.2, t: 68.8, w: 9.0, h: 11.6, label: "PCD" },
+    { id: "phase-k", l: 53.5, t: 71.6, w: 3.5, h: 8.6, label: "JCA" },
+    { id: "phase3b", l: 49.4, t: 59.3, w: 9.3, h: 26.6, label: "三期B" },
+    { id: "phase-v", l: 51.1, t: 34.5, w: 12.7, h: 20.1, label: "創新樓" },
+    { id: "phase-x", l: 55.2, t: 51.9, w: 18.6, h: 16.3, label: "X座" },
+    { id: "phase4", l: 58.7, t: 72.0, w: 13.6, h: 19.4, label: "四期" },
+    { id: "phase8", l: 66.8, t: 29.1, w: 25.8, h: 19.4, label: "八期Z" },
+    { id: "phase7", l: 74.3, t: 67.7, w: 5.9, h: 22.6, label: "七期Y" }
+  ];
+
+  const menuEl = document.getElementById("menu");
+  MENU.forEach(([id, label]) => {
+    const b = document.createElement("button");
+    b.className = "btn-glass";
+    b.textContent = label;
+    b.dataset.id = id;
+    b.onclick = () => show(id);
+    menuEl.appendChild(b);
+  });
+
+  const campus = document.getElementById("campusImg");
+  if (DATA.home_map) campus.src = DATA.home_map;
+  const hs = document.getElementById("hotspots");
+  HOTSPOTS.forEach(h => {
+    const d = document.createElement("div");
+    d.className = "hotspot";
+    d.title = h.label;
+    d.style.left = h.l + "%";
+    d.style.top = h.t + "%";
+    d.style.width = h.w + "%";
+    d.style.height = h.h + "%";
+    d.onclick = () => show(h.id);
+    hs.appendChild(d);
+  });
+  function layoutHotspots() {
+    const img = campus;
+    const wrap = document.getElementById("mapWrap");
+    if (!img.naturalWidth) return;
+    const box = wrap.getBoundingClientRect();
+    const ir = img.naturalWidth / img.naturalHeight;
+    const br = box.width / box.height;
+    let w, h, l, t;
+    if (br > ir) { h = box.height; w = h * ir; l = (box.width - w) / 2; t = 0; }
+    else { w = box.width; h = w / ir; l = 0; t = (box.height - h) / 2; }
+    hs.style.left = l + "px";
+    hs.style.top = t + "px";
+    hs.style.width = w + "px";
+    hs.style.height = h + "px";
+  }
+  campus.addEventListener("load", layoutHotspots);
+  window.addEventListener("resize", layoutHotspots);
+
+  function showView(id) {
+    document.querySelectorAll(".page-view").forEach(el => el.classList.remove("on"));
+    document.getElementById(id).classList.add("on");
+  }
+  function setActive(id) {
+    menuEl.querySelectorAll(".btn-glass").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+  }
+  function esc(s) {
+    return String(s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  }
+  function imgTag(src, cls) {
+    return `<img src="${esc(src)}" class="${cls || ""}" alt="" onclick="openLb('${esc(src)}')">`;
+  }
+
+  window.openLb = function (src) {
+    const lb = document.getElementById("lightbox");
+    lb.querySelector("img").src = src;
+    lb.classList.add("on");
+  };
+  document.getElementById("lightbox").onclick = function () { this.classList.remove("on"); };
+
+  window.toggleAlbum = function (id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("on");
+  };
+
+  function renderRows(pid, rows, filter) {
+    const q = (filter || "").trim().toLowerCase().replace(/\s+/g, "");
+    let html = `<table class="info-table"><thead><tr><th style="width:70px">樓層</th><th>位置</th><th>類別</th></tr></thead><tbody>`;
+    let n = 0;
+    rows.forEach((r, i) => {
+      const blob = `${r.floor} ${r.location} ${r.kind}`.toLowerCase().replace(/\s+/g, "");
+      if (q && blob.indexOf(q) < 0) return;
+      n++;
+      const aid = pid + "-" + i;
+      const has = (r.images && r.images.length) || (r.pdfs && r.pdfs.length);
+      html += `<tr class="${q ? "hit" : ""}">
+        <td><b style="color:#1e40af;text-decoration:underline">${esc(r.floor)}</b></td>
+        <td>${has ? `<span class="loc-btn" onclick="toggleAlbum('${aid}')">${esc(r.location)}</span>` : esc(r.location)}</td>
+        <td class="kind">${esc(r.kind)}</td>
+      </tr>`;
+      if (has) {
+        html += `<tr><td colspan="3"><div class="album" id="${aid}">`;
+        if (r.pdfs && r.pdfs.length) {
+          html += r.pdfs.map(p => `<a class="pdf-link" href="${esc(p.src)}" target="_blank">平面圖：${esc(p.name)}</a>`).join(" ");
+        }
+        if (r.images && r.images.length) {
+          html += `<div class="gallery">` + r.images.map(s => imgTag(s)).join("") + `</div>`;
+        }
+        html += `</div></td></tr>`;
+      }
+    });
+    html += `</tbody></table>`;
+    if (!n) html = `<p class="empty">沒有符合的項目</p>` + html;
+    return html;
+  }
+
+  function showPhase(pid) {
+    const p = DATA.phases[pid] || { rows: [], gallery: [], titles: [] };
+    const title = (MENU.find(m => m[0] === pid) || [pid, pid])[1];
+    const color = COLORS[pid] || "#111";
+    const heroes = DATA.heroes || {};
+    const heroImgs = [];
+    if (heroes[pid]) heroImgs.push(heroes[pid]);
+    if (pid === "phase1" && heroes["phase1-lib"]) heroImgs.push(heroes["phase1-lib"]);
+    if (!heroImgs.length && p.gallery && p.gallery[0]) heroImgs.push(p.gallery[0], p.gallery[1], p.gallery[2]);
+    let h = `<h2 class="phase-title" style="background:${color}">${esc(title)}</h2>`;
+    if (heroImgs.filter(Boolean).length) {
+      h += `<div class="hero-row">` + heroImgs.filter(Boolean).map(s => imgTag(s)).join("") + `</div>`;
+    }
+    h += renderRows(pid, p.rows || [], "");
+    const extras = (p.gallery || []).slice(0, 24);
+    if (extras.length) {
+      h += `<div class="subhead">相關相片</div><div class="gallery">` + extras.map(s => imgTag(s)).join("") + `</div>`;
+    }
+    h += `<div class="center"><button class="loc-btn back-btn" onclick="show('map')">返回主頁</button></div>`;
+    document.getElementById("phaseMount").innerHTML = h;
+    showView("view-phase");
+    setActive(pid);
+  }
+
+  function showSpecial(id) {
+    const title = (MENU.find(m => m[0] === id) || [id, id])[1];
+    const g = (DATA.special_galleries || {})[id] || [];
+    let h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
+    if (id === "pic4") {
+      const pw = DATA.passwords || {};
+      h += `<table class="info-table pw-table"><thead><tr><th>範圍</th><th>操作密碼</th></tr></thead><tbody>`;
+      (pw.panels || []).forEach(r => {
+        h += `<tr><td>${esc(r.area)}</td><td><span class="loc-btn">${esc(r.code)}</span></td></tr>`;
+      });
+      h += `</tbody></table>`;
+      (pw.systems || []).forEach(s => {
+        h += `<div class="subhead">${esc(s.name)}</div>
+          <table class="info-table pw-table"><tbody>
+          <tr><td>日常操作登入用戶</td><td>${esc(s.daily_user)}</td></tr>
+          <tr><td>日常操作密碼</td><td>${esc(s.daily_pass)}</td></tr>
+          <tr><td>工程系統登入用戶</td><td>${esc(s.eng_user)}</td></tr>
+          <tr><td>工程系統密碼</td><td>${esc(s.eng_pass)}</td></tr>
+          </tbody></table>`;
+      });
+    } else if (g.length) {
+      h += g.map(s => `<p class="center">${imgTag(s, "full-img")}</p>`).join("");
+    } else {
+      h += `<p class="empty">沒有可用圖片</p>`;
+    }
+    h += `<div class="center"><button class="loc-btn back-btn" onclick="show('map')">返回主頁</button></div>`;
+    document.getElementById("specialMount").innerHTML = h;
+    showView("view-special");
+    setActive(id);
+  }
+
+  function runSearch(q) {
+    q = (q || "").trim().toLowerCase().replace(/\s+/g, "");
+    if (!q) { show("map"); return; }
+    let h = `<h2 class="phase-title" style="background:#1e3a8a">搜尋：${esc(q)}</h2>`;
+    let hits = 0;
+    MENU.filter(m => m[0].indexOf("phase") === 0).forEach(([pid, label]) => {
+      const p = DATA.phases[pid];
+      if (!p) return;
+      const rows = (p.rows || []).filter(r => (`${r.floor} ${r.location} ${r.kind}`).toLowerCase().replace(/\s+/g, "").indexOf(q) >= 0);
+      if (!rows.length) return;
+      hits += rows.length;
+      h += `<div class="subhead">${esc(label)}</div>` + renderRows(pid, rows, q);
+    });
+    if (!hits) h += `<p class="empty">找不到「${esc(q)}」</p>`;
+    h += `<div class="center"><button class="loc-btn back-btn" onclick="show('map')">返回主頁</button></div>`;
+    document.getElementById("searchMount").innerHTML = h;
+    showView("view-search");
+    setActive("");
+  }
+
+  window.show = function (id) {
+    if (id === "map") {
+      showView("view-map");
+      setActive("");
+      layoutHotspots();
+      return;
+    }
+    if (id.indexOf("pic") === 0) return showSpecial(id);
+    showPhase(id);
+  };
+
+  const q = document.getElementById("q");
+  q.addEventListener("keydown", e => {
+    if (e.key === "Enter") runSearch(q.value);
+  });
+  q.addEventListener("input", () => {
+    if (!q.value.trim()) show("map");
+  });
+})();
+</script>
+</body>
+</html>
