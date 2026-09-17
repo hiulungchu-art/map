@@ -256,6 +256,7 @@ tr.hit { outline: 2px solid #2563eb; }
 .cell-rnb { background: #86efac; font-weight: 700; color: #14532d; }
 .cell-hw { background: #bae6fd; font-weight: 700; color: #0c4a6e; }
 .cell-jc { background: #fde047; font-weight: 700; color: #713f12; }
+.cell-atal { background: #fdba74; font-weight: 700; color: #7c2d12; }
 .cell-empty { background: #d1d5db; color: transparent; }
 .legend-bar {
   display: flex;
@@ -270,6 +271,7 @@ tr.hit { outline: 2px solid #2563eb; }
 .legend-rnb { background: #86efac; }
 .legend-hw { background: #bae6fd; }
 .legend-jc { background: #fde047; }
+.legend-atal { background: #fdba74; }
 
 </style>
 </head>
@@ -476,17 +478,17 @@ tr.hit { outline: 2px solid #2563eb; }
   const LOCS = ["JCA","Lib","Ph 1","Ph 2","Ph 2ab","Ph 3A","Ph 3B","4A/IC","Ph 5","Ph 6","Ph 7","PCD","Ph 8","JCIT","X"];
   // R=RNB, H=HW, J=JC, ""=empty
   const CONTRACTOR_ROWS = [
-    { cat: "Sprinkler System 花灑系統", sys: "Sprinkler System 花灑系統", cells: "RRRRRRRRRRRRRRR" },
-    { cat: "FH/HR System 消防喉轆/龍頭系統", sys: "FH/HR System 消防喉轆/龍頭系統", cells: "RRRRRRRRRRRRRRR" },
+    { cat: "Sprinkler System 花灑系統", sys: "Sprinkler System 花灑系統", cells: "RRRRRRRRRRRAAAA" },
+    { cat: "FH/HR System 消防喉轆/龍頭系統", sys: "FH/HR System 消防喉轆/龍頭系統", cells: "RRRRRRRRRRRAAAA" },
     { cat: "Addressable AFA System 智能式自動報火警系統", sys: "AFA Panel 消防控制箱", cells: "JHHHHHHHJHJHJJJ" },
     { cat: "", sys: "PC station 電腦", cells: "JHHHHHHHJHJHJJJ" },
     { cat: "", sys: "Smoke Detector 煙感", cells: "JHHHHHHHJHJHJJJ" },
     { cat: "", sys: "Heat Detector 熱感", cells: "JHHHHHHHJHJHJJJ" },
     { cat: "Others 其他", sys: "Drencher (manual) 水簾 (手動)", cells: ".R............." },
-    { cat: "", sys: "Drencher (auto) 水簾 (自動) / Open-head side", cells: "R....RR......R." },
-    { cat: "", sys: "wall sprinkler 開放式花灑", cells: "R....R.......R." },
-    { cat: "", sys: "Pre-action sprinkler 頂作用花灑", cells: "..R.R..R..R.R.." },
-    { cat: "", sys: "Fire Shutter (detection/Spr) 防火閘(煙感/花灑)", cells: "RR..RRR..RR.RR." },
+    { cat: "", sys: "Drencher (auto) 水簾 (自動) / Open-head side", cells: "R....RR....A..." },
+    { cat: "", sys: "wall sprinkler 開放式花灑", cells: "R....R........." },
+    { cat: "", sys: "Pre-action sprinkler 頂作用花灑", cells: "..R.R..R..R...." },
+    { cat: "", sys: "Fire Shutter (detection/Spr) 防火閘(煙感/花灑)", cells: "RR..RRR..RR.A.." },
     { cat: "", sys: "Fire Shutter (fusible link) 防火閘(菲士)", cells: "R.RRR...R......" },
     { cat: "", sys: "FM200 / Novec 1230 Gas System 氣體系統", cells: "..R.RR........." },
     { cat: "", sys: "Smoke Curtain 隔煙屏", cells: ".........R....." },
@@ -495,12 +497,14 @@ tr.hit { outline: 2px solid #2563eb; }
 
   function cellClass(ch) {
     if (ch === "R") return "cell-rnb";
+    if (ch === "A") return "cell-atal";
     if (ch === "H") return "cell-hw";
     if (ch === "J") return "cell-jc";
     return "cell-empty";
   }
   function cellLabel(ch) {
     if (ch === "R") return "RNB";
+    if (ch === "A") return "ATAL";
     if (ch === "H") return "HW";
     if (ch === "J") return "JC";
     return "";
@@ -528,6 +532,7 @@ tr.hit { outline: 2px solid #2563eb; }
     });
     h += `</tbody></table></div>`;
     h += `<div class="legend-bar legend-rnb"><b>RNB</b> — 1. 朱浩然 98771974　2. 冼錫健 61533213　3. 郭榮基 61303755</div>`;
+    h += `<div class="legend-bar legend-atal"><b>ATAL 安樂</b> — 1. 24小時中心 27999316　2. 馮權威 97545846　3. 徐德良 92627989　4. Raymond Wong 37966511</div>`;
     h += `<div class="legend-bar legend-hw"><b>HW - Honeywell</b> — 24小時中心 800938703</div>`;
     h += `<div class="legend-bar legend-jc"><b>JC - Johnson Control</b> — 24小時中心 22672333　Project no. 7078</div>`;
     return h;
