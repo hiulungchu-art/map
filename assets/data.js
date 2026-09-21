@@ -7869,13 +7869,6 @@ window.FS_DATA = {
         }
       ]
     },
-    "pic4": {
-      "id": "pic4",
-      "titles": [],
-      "rows": [],
-      "gallery": [],
-      "pages": []
-    },
     "pic5": {
       "id": "pic5",
       "titles": [],
@@ -7915,7 +7908,6 @@ window.FS_DATA = {
       "assets/images/pump-rooms.jpg",
       "assets/images/img3A.jpg"
     ],
-    "pic4": [],
     "pic5": [
       "assets/images/contractor-chart.png",
       "assets/images/contractor-photo.jpg"
@@ -7951,37 +7943,5 @@ window.FS_DATA = {
     "phase3b": "assets/images/hero-phase3b.jpg",
     "phase4": "assets/images/hero-phase4.jpg",
     "phase6": "assets/images/hero-phase6.jpg"
-  },
-  "passwords": {
-    "panels": [
-      {
-        "area": "Phase 1 to 7、圖書館 LIB、JCA、PCD",
-        "code": "FA4605"
-      },
-      {
-        "area": "Phase 8（Z Block）",
-        "code": "014834"
-      },
-      {
-        "area": "JCIT（V Block）",
-        "code": "014835"
-      }
-    ],
-    "systems": [
-      {
-        "name": "Honeywell 電氣系統",
-        "daily_user": "OPER",
-        "daily_pass": "Hkpu27666",
-        "eng_user": "Hkpu",
-        "eng_pass": "Pulyu27999"
-      },
-      {
-        "name": "Johnson 電氣系統",
-        "daily_user": "OPER",
-        "daily_pass": "27666",
-        "eng_user": "HKPU",
-        "eng_pass": "27999"
-      }
-    ]
   }
 };
