@@ -196,7 +196,6 @@ tr.hit { outline: 2px solid #2563eb; }
   padding: 6px 20px;
 }
 .center { text-align: center; }
-.pw-table td:first-child { text-align: left; padding-left: 12px; font-weight: bold; }
 #lightbox {
   display: none;
   position: fixed;
@@ -305,7 +304,7 @@ tr.hit { outline: 2px solid #2563eb; }
 <script src="assets/data.js"></script>
 <script>
 (function () {
-  const DATA = window.FS_DATA || { phases: {}, special_galleries: {}, heroes: {}, passwords: {} };
+  const DATA = window.FS_DATA || { phases: {}, special_galleries: {}, heroes: {} };
   const MENU = [
     ["phase1", "一期 (CDEF) & Library"],
     ["phase2", "二期 (VA, VS, MN)"],
@@ -324,7 +323,6 @@ tr.hit { outline: 2px solid #2563eb; }
     ["pic1", "F.S INLET 消防入水掣"],
     ["pic2", "SPRINKLER INLET 花灑入水掣"],
     ["pic3", "消防水缸,總掣,泵房位置"],
-    ["pic4", "消防系統電腦操作密碼"],
     ["pic5", "消防承辦商"]
   ];
   const COLORS = {
@@ -536,11 +534,6 @@ tr.hit { outline: 2px solid #2563eb; }
     h += `<div class="legend-bar legend-jc"><b>JC - Johnson Control</b> — 24小時中心 22672333　Project no. 7078</div>`;
     return h;
   }
-  function orgBox(role, lines) {
-    return `<div class="org-box"><div class="role">${esc(role)}</div>` +
-      lines.map(t => `<div class="meta">${esc(t)}</div>`).join("") + `</div>`;
-  }
-
   function showSpecial(id) {
     const title = (MENU.find(m => m[0] === id) || [id, id])[1];
     const g = (DATA.special_galleries || {})[id] || [];
@@ -549,23 +542,7 @@ tr.hit { outline: 2px solid #2563eb; }
       h = renderContractorTable();
     } else {
       h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
-      if (id === "pic4") {
-        const pw = DATA.passwords || {};
-        h += `<table class="info-table pw-table"><thead><tr><th>範圍</th><th>操作密碼</th></tr></thead><tbody>`;
-        (pw.panels || []).forEach(r => {
-          h += `<tr><td>${esc(r.area)}</td><td><span class="loc-btn">${esc(r.code)}</span></td></tr>`;
-        });
-        h += `</tbody></table>`;
-        (pw.systems || []).forEach(s => {
-          h += `<div class="subhead">${esc(s.name)}</div>
-            <table class="info-table pw-table"><tbody>
-            <tr><td>日常操作登入用戶</td><td>${esc(s.daily_user)}</td></tr>
-            <tr><td>日常操作密碼</td><td>${esc(s.daily_pass)}</td></tr>
-            <tr><td>工程系統登入用戶</td><td>${esc(s.eng_user)}</td></tr>
-            <tr><td>工程系統密碼</td><td>${esc(s.eng_pass)}</td></tr>
-            </tbody></table>`;
-        });
-      } else if (g.length) {
+      if (g.length) {
         h += g.map(s => `<p class="center">${imgTag(s, "full-img")}</p>`).join("");
       } else {
         h += `<p class="empty">沒有可用圖片</p>`;
