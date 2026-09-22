@@ -272,6 +272,23 @@ tr.hit { outline: 2px solid #2563eb; }
 .legend-jc { background: #fde047; }
 .legend-atal { background: #fdba74; }
 
+
+.ext-link-btn {
+  display: inline-block;
+  margin: 24px 0 8px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(to bottom, #3b82f6 0%, #1d4ed8 100%);
+  border: 1px solid #1e40af;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 2px 2px 6px rgba(0,0,0,.2);
+}
+.ext-link-btn:hover { filter: brightness(1.05); }
+.ext-note { color: #4b5563; text-align: center; margin: 8px 24px 0; font-size: 14px; }
+
 </style>
 </head>
 <body>
@@ -323,6 +340,7 @@ tr.hit { outline: 2px solid #2563eb; }
     ["pic1", "F.S INLET 消防入水掣"],
     ["pic2", "SPRINKLER INLET 花灑入水掣"],
     ["pic3", "消防水缸,總掣,泵房位置"],
+    ["pic4", "Rolling programme"],
     ["pic5", "消防承辦商"]
   ];
   const COLORS = {
@@ -534,12 +552,20 @@ tr.hit { outline: 2px solid #2563eb; }
     h += `<div class="legend-bar legend-jc"><b>JC - Johnson Control</b> — 24小時中心 22672333　Project no. 7078</div>`;
     return h;
   }
+  const ROLLING_PROGRAMME_URL = "https://polyuit-my.sharepoint.com/:x:/g/personal/tkcheun_polyu_edu_hk/IQAP9VMyLR3VQbX2FYd_qBhCAeVE_DeFNpk2oLhdWoUAsBo?e=y8sFkH";
+
   function showSpecial(id) {
     const title = (MENU.find(m => m[0] === id) || [id, id])[1];
     const g = (DATA.special_galleries || {})[id] || [];
     let h = "";
     if (id === "pic5") {
       h = renderContractorTable();
+    } else if (id === "pic4") {
+      h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
+      h += `<div class="center" style="padding:28px 16px">
+        <p class="ext-note">開啟 PolyU SharePoint 上的 Rolling programme.xlsx（可能需要登入）</p>
+        <p><a class="ext-link-btn" href="${esc(ROLLING_PROGRAMME_URL)}" target="_blank" rel="noopener noreferrer">開啟 Rolling programme.xlsx</a></p>
+      </div>`;
     } else {
       h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
       if (g.length) {
