@@ -553,6 +553,7 @@ tr.hit { outline: 2px solid #2563eb; }
     return h;
   }
   const ROLLING_PROGRAMME_URL = "https://polyuit-my.sharepoint.com/:x:/g/personal/tkcheun_polyu_edu_hk/IQAP9VMyLR3VQbX2FYd_qBhCAeVE_DeFNpk2oLhdWoUAsBo?e=y8sFkH";
+  const OFEBS_LOGIN_URL = "https://ofebs.polyu.edu.hk:8028/OA_HTML/AppsLocalLogin.jsp";
 
   function showSpecial(id) {
     const title = (MENU.find(m => m[0] === id) || [id, id])[1];
@@ -565,6 +566,8 @@ tr.hit { outline: 2px solid #2563eb; }
       h += `<div class="center" style="padding:28px 16px">
         <p class="ext-note">開啟 PolyU SharePoint 上的 Rolling programme.xlsx（可能需要登入）</p>
         <p><a class="ext-link-btn" href="${esc(ROLLING_PROGRAMME_URL)}" target="_blank" rel="noopener noreferrer">開啟 Rolling programme.xlsx</a></p>
+        <p class="ext-note" style="margin-top:28px">PolyU e-Business Suite 登入</p>
+        <p><a class="ext-link-btn" href="${esc(OFEBS_LOGIN_URL)}" target="_blank" rel="noopener noreferrer">Login</a></p>
       </div>`;
     } else {
       h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
