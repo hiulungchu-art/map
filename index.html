@@ -340,7 +340,7 @@ tr.hit { outline: 2px solid #2563eb; }
     ["pic1", "F.S INLET 消防入水掣"],
     ["pic2", "SPRINKLER INLET 花灑入水掣"],
     ["pic3", "消防水缸,總掣,泵房位置"],
-    ["pic4", "Rolling programme"],
+    ["pic4", "工作記錄 & Oracle"],
     ["pic5", "消防承辦商"]
   ];
   const COLORS = {
@@ -564,10 +564,10 @@ tr.hit { outline: 2px solid #2563eb; }
     } else if (id === "pic4") {
       h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
       h += `<div class="center" style="padding:28px 16px">
-        <p class="ext-note">開啟 PolyU SharePoint 上的 Rolling programme.xlsx（可能需要登入）</p>
-        <p><a class="ext-link-btn" href="${esc(ROLLING_PROGRAMME_URL)}" target="_blank" rel="noopener noreferrer">開啟 Rolling programme.xlsx</a></p>
-        <p class="ext-note" style="margin-top:28px">PolyU e-Business Suite 登入</p>
-        <p><a class="ext-link-btn" href="${esc(OFEBS_LOGIN_URL)}" target="_blank" rel="noopener noreferrer">Login</a></p>
+        <p class="ext-note">日常工作記錄（SharePoint Excel，可能需要登入）</p>
+        <p><a class="ext-link-btn" href="${esc(ROLLING_PROGRAMME_URL)}" target="_blank" rel="noopener noreferrer">開啟日常工作記錄 Excel</a></p>
+        <p class="ext-note" style="margin-top:28px">Oracle E-Business Suite（OFEBS）</p>
+        <p><a class="ext-link-btn" href="${esc(OFEBS_LOGIN_URL)}" target="_blank" rel="noopener noreferrer">開啟 Oracle 登入</a></p>
       </div>`;
     } else {
       h = `<h2 class="phase-title" style="background:#1e3a8a">${esc(title)}</h2>`;
